@@ -2,6 +2,13 @@ import React from 'react';
 import { CheckCircle2 } from 'lucide-react';
 
 const Investition: React.FC = () => {
+  const scrollToContact = () => {
+    const element = document.getElementById('anfrage');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="py-24 px-6 relative">
       <div className="container mx-auto max-w-5xl">
@@ -31,7 +38,10 @@ const Investition: React.FC = () => {
             </div>
 
             <div className="inline-flex flex-col items-center">
-              <button className="px-10 py-4 bg-organic-charcoal text-white rounded-full font-medium hover:scale-105 transition-transform duration-300 shadow-xl shadow-organic-sage/20">
+              <button 
+                onClick={scrollToContact}
+                className="px-10 py-4 bg-organic-charcoal text-white rounded-full font-medium hover:scale-105 transition-transform duration-300 shadow-xl shadow-organic-sage/20"
+              >
                 Individuelles Angebot anfragen
               </button>
               <span className="mt-4 text-xs text-organic-textLight">

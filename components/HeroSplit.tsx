@@ -21,7 +21,7 @@ const HeroSplit: React.FC = () => {
   return (
     <div id="coaches" className="relative w-full min-h-screen pt-20 flex flex-col lg:flex-row overflow-hidden">
       
-      {/* LEON - Left Side (Sage/Meaning) */}
+      {/* LEON FELDMEIER - Left Side (Sage/Meaning) */}
       <div 
         className={`
           relative flex flex-col justify-center items-center lg:items-end px-6 lg:px-20 py-20 lg:py-0
@@ -44,7 +44,7 @@ const HeroSplit: React.FC = () => {
           
           <h1 className="text-5xl lg:text-7xl font-serif font-medium mb-6 leading-tight text-organic-charcoal">
             Leon <br />
-            <span className="text-organic-textLight italic font-light">Vance</span>
+            <span className="text-organic-textLight italic font-light">Feldmeier</span>
           </h1>
           
           <p className="text-lg text-organic-text font-light mb-8 leading-relaxed">
@@ -70,18 +70,20 @@ const HeroSplit: React.FC = () => {
            `}>
               <img 
                 src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=1887&auto=format&fit=crop" 
-                alt="Leon - Artistic Coach"
+                alt="Leon Feldmeier"
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-organic-sage/80 via-transparent to-transparent opacity-40"></div>
-              <div className="absolute bottom-8 left-8 right-8 text-center glass-panel rounded-xl py-3 px-4">
-                <p className="font-serif italic text-lg text-organic-charcoal">"Kunst ist der Spiegel."</p>
+              <div className="absolute bottom-8 left-8 right-8 text-center glass-panel rounded-xl py-4 px-4 shadow-sm">
+                <p className="font-sans font-medium text-[10px] tracking-[0.25em] text-organic-charcoal uppercase leading-none">
+                  "Kunst ist der Spiegel"
+                </p>
               </div>
            </div>
         </div>
       </div>
 
-      {/* SIMON - Right Side (Sky/Leadership) */}
+      {/* SIMON KUHN - Right Side (Sky/Leadership) */}
       <div 
         className={`
           relative flex flex-col justify-center items-center lg:items-start px-6 lg:px-20 py-20 lg:py-0
@@ -103,7 +105,7 @@ const HeroSplit: React.FC = () => {
 
           <h1 className="text-5xl lg:text-7xl font-serif font-medium mb-6 leading-tight text-organic-charcoal">
             Simon <br />
-            <span className="text-organic-textLight italic font-light">Hale</span>
+            <span className="text-organic-textLight italic font-light">Kuhn</span>
           </h1>
           
           <p className="text-lg text-organic-text font-light mb-8 leading-relaxed">
@@ -129,12 +131,14 @@ const HeroSplit: React.FC = () => {
            `}>
               <img 
                 src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1740&auto=format&fit=crop" 
-                alt="Simon - Leadership Coach"
+                alt="Simon Kuhn"
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
               />
                <div className="absolute inset-0 bg-gradient-to-t from-organic-sky/80 via-transparent to-transparent opacity-40"></div>
-               <div className="absolute bottom-8 left-8 right-8 text-center glass-panel rounded-xl py-3 px-4">
-                <p className="font-serif italic text-lg text-organic-charcoal">"Klarheit ist Macht."</p>
+               <div className="absolute bottom-8 left-8 right-8 text-center glass-panel rounded-xl py-4 px-4 shadow-sm">
+                <p className="font-sans font-medium text-[10px] tracking-[0.25em] text-organic-charcoal uppercase leading-none">
+                  "Klarheit ist Macht"
+                </p>
               </div>
            </div>
         </div>

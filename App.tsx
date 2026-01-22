@@ -5,6 +5,7 @@ import HeroSplit from './components/HeroSplit';
 import Services from './components/Services';
 import Testimonials from './components/Testimonials';
 import Investition from './components/Investition';
+import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 
 function App() {
@@ -36,6 +37,8 @@ function App() {
         <Testimonials />
 
         <Investition />
+
+        <ContactForm />
       </main>
 
       <Footer />

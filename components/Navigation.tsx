@@ -20,6 +20,14 @@ const Navigation: React.FC = () => {
     { label: 'Stimmen', href: '#testimonials' },
   ];
 
+  const scrollToContact = () => {
+    const element = document.getElementById('anfrage');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setMobileMenuOpen(false);
+    }
+  };
+
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b border-transparent ${
@@ -28,7 +36,7 @@ const Navigation: React.FC = () => {
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
-        <div className="flex items-center gap-2 group cursor-pointer">
+        <div className="flex items-center gap-2 group cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
           <div className="w-8 h-8 rounded-full border border-organic-charcoal/20 flex items-center justify-center group-hover:border-organic-charcoal/50 transition-colors">
              {/* Gradient Pill Logo */}
             <div className="w-1 h-4 bg-gradient-to-b from-organic-sageDark to-organic-skyDark rounded-full"></div>
@@ -50,7 +58,10 @@ const Navigation: React.FC = () => {
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-organic-charcoal transition-all duration-300 group-hover:w-full"></span>
             </a>
           ))}
-          <button className="px-6 py-2.5 bg-organic-charcoal text-white rounded-full text-xs font-medium tracking-widest hover:bg-black hover:scale-105 transition-all duration-300 shadow-lg shadow-black/5">
+          <button 
+            onClick={scrollToContact}
+            className="px-6 py-2.5 bg-organic-charcoal text-white rounded-full text-xs font-medium tracking-widest hover:bg-black hover:scale-105 transition-all duration-300 shadow-lg shadow-black/5"
+          >
             GESPRÄCH VEREINBAREN
           </button>
         </div>
@@ -79,7 +90,10 @@ const Navigation: React.FC = () => {
               {item.label}
             </a>
           ))}
-          <button className="w-full py-4 mt-4 bg-organic-charcoal text-white rounded-lg text-sm font-medium tracking-widest hover:bg-black transition-all">
+          <button 
+            onClick={scrollToContact}
+            className="w-full py-4 mt-4 bg-organic-charcoal text-white rounded-lg text-sm font-medium tracking-widest hover:bg-black transition-all"
+          >
             GESPRÄCH VEREINBAREN
           </button>
         </div>

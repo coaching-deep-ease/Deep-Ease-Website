@@ -31,8 +31,8 @@ const Footer: React.FC = () => {
           <div>
             <h5 className="text-sm font-semibold uppercase tracking-widest mb-6 text-organic-charcoal">Kontakt</h5>
             <ul className="space-y-4 text-organic-textLight text-sm font-light">
-              <li>hallo@deepease.co</li>
-              <li>+49 (0) 30 1234567</li>
+              <li>coaching@deep-ease.com</li>
+              <li>+49 1631365144</li>
               <li className="hover:text-organic-charcoal cursor-pointer transition-colors pt-4 font-medium">Gespräch buchen</li>
             </ul>
           </div>
