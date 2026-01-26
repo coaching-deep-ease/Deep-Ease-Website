@@ -22,7 +22,7 @@ function App() {
           <div className="absolute inset-0 bg-white/30 -z-10 backdrop-blur-sm"></div>
           <div className="container mx-auto max-w-4xl">
             <blockquote className="text-3xl md:text-5xl font-serif italic leading-tight text-organic-charcoal/90 mb-10">
-              "Wir reparieren nicht, was kaputt ist. Wir entfernen lediglich das, was das Meisterwerk verdeckt, das bereits da ist."
+              "Tiefe schafft Klarheit und Klarheit schafft Leichtigkeit. Wir begleiten dich dabei den Kern deiner Stärke freizulegen damit du deinen Weg mit echtem Vertrauen gehen kannst."
             </blockquote>
             <div className="flex justify-center items-center gap-4">
                <div className="h-[1px] w-12 bg-organic-charcoal/20"></div>

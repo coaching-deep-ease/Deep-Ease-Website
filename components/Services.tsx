@@ -1,11 +1,11 @@
 import React from 'react';
-import { Compass, Users, Target, Heart } from 'lucide-react';
+import { Compass, Users, Target, ShieldCheck } from 'lucide-react';
 
 const services = [
   {
     icon: <Compass className="text-organic-sageDark" />,
     title: "Persönliche Neuausrichtung",
-    desc: "Eine 12-wöchige Reise mit Leon, um deine Kernwerte wiederzuentdecken und deinen Lebensweg mit deinem authentischen Selbst in Einklang zu bringen.",
+    desc: "Du suchst nach einer neuen Richtung oder willst dich beruflich verändern. Gemeinsam identifizieren wir deine Werte und überwinden Blockaden damit du deinen Weg mit Klarheit und einem konkreten Plan weitergehen kannst.",
     coach: "Leon",
     theme: "sage"
   },
@@ -24,9 +24,9 @@ const services = [
     theme: "sky"
   },
   {
-    icon: <Heart className="text-organic-sageDark" />,
-    title: "Emotionale Integration",
-    desc: "Tiefenarbeit zur Verarbeitung von Übergängen, Trauer oder großen Veränderungen durch künstlerische und somatische Praktiken.",
+    icon: <ShieldCheck className="text-organic-sageDark" />,
+    title: "Resilienz im Wandel",
+    desc: "Schwierige Lebensphasen fordern uns heraus. Mit systemischen Methoden unterstütze ich dich dabei neue Perspektiven einzunehmen und innere Stärke aufzubauen um Krisen in echte Chancen zur Weiterentwicklung zu verwandeln.",
     coach: "Leon",
     theme: "sage"
   }
@@ -50,7 +50,6 @@ const Services: React.FC = () => {
               key={index}
               className="glass-card p-10 rounded-3xl group relative overflow-hidden flex flex-col h-full"
             >
-              {/* Subtle Color Accent Gradient */}
               <div className={`absolute top-0 right-0 w-32 h-32 rounded-bl-full opacity-10 transition-transform duration-500 group-hover:scale-150 ${service.theme === 'sage' ? 'bg-organic-sageDark' : 'bg-organic-skyDark'}`}></div>
 
               <div className="relative z-10 flex-grow">

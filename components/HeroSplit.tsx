@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { ArrowRight, Sparkles, Briefcase, ChevronRight } from 'lucide-react';
+import { ArrowRight, Sparkles, Briefcase, ChevronRight, X } from 'lucide-react';
 import { SplitState } from '../types';
 
 const HeroSplit: React.FC = () => {
   const [splitState, setSplitState] = useState<SplitState>('neutral');
+  const [showLeonBio, setShowLeonBio] = useState(false);
 
-  // Helper to determine widths based on state
   const getWidthClass = (side: 'left' | 'right') => {
     if (splitState === 'neutral') return 'lg:w-1/2';
     if (splitState === side) return 'lg:w-[65%]';
-    return 'lg:w-[35%]'; // The shrunk side
+    return 'lg:w-[35%]';
   };
 
   const getOpacityClass = (side: 'left' | 'right') => {
@@ -21,7 +21,7 @@ const HeroSplit: React.FC = () => {
   return (
     <div id="coaches" className="relative w-full min-h-screen pt-20 flex flex-col lg:flex-row overflow-hidden">
       
-      {/* LEON FELDMEIER - Left Side (Sage/Meaning) */}
+      {/* LEON FELDMEIER - Left Side */}
       <div 
         className={`
           relative flex flex-col justify-center items-center lg:items-end px-6 lg:px-20 py-20 lg:py-0
@@ -33,7 +33,6 @@ const HeroSplit: React.FC = () => {
         onMouseEnter={() => setSplitState('left')}
         onMouseLeave={() => setSplitState('neutral')}
       >
-        {/* Background Overlay for Leon - Sage */}
         <div className={`absolute inset-0 bg-gradient-to-br from-organic-sage/50 to-transparent opacity-0 transition-opacity duration-700 ${splitState === 'left' ? 'opacity-100' : ''}`} />
 
         <div className={`relative z-10 max-w-lg text-center lg:text-right transition-all duration-500 ${getOpacityClass('left')}`}>
@@ -48,42 +47,57 @@ const HeroSplit: React.FC = () => {
           </h1>
           
           <p className="text-lg text-organic-text font-light mb-8 leading-relaxed">
-            Für die Suchenden und Kreativen. Entdecke deinen inneren Kompass durch achtsamen Dialog und künstlerische Exploration neu. Sinnfindung ist keine Aufgabe, sondern eine Rückkehr zu dir selbst.
+            Fokus für Suchende und Klarheit für alle, die ihren Weg neu definieren. Mit systemischer Tiefe begleite ich dich dabei, deine inneren Werte zu ordnen und Blockaden zu lösen. Gemeinsam schaffen wir das Fundament für ein Leben, das wirklich zu dir passt.
           </p>
 
-          <div className="flex flex-col lg:flex-row-reverse gap-4 items-center justify-end">
-            <button className="group/btn relative px-8 py-3 bg-organic-charcoal text-white rounded-full font-medium overflow-hidden transition-all hover:bg-black hover:shadow-lg hover:shadow-organic-sage/20">
-              <span className="relative z-10 flex items-center gap-2">
-                Leons Pfad <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-              </span>
-            </button>
-            <span className="text-xs text-organic-textLight uppercase tracking-widest">Werte & Kunst</span>
-          </div>
-
-           {/* Floating Image Card Effect */}
+           {/* Photo Card */}
            <div className={`
-             mt-12 w-full aspect-[3/4] max-w-[320px] mx-auto lg:mx-0 lg:ml-auto
+             mt-4 w-full aspect-[3/4] max-w-[320px] mx-auto lg:mx-0 lg:ml-auto
              rounded-2xl overflow-hidden relative
              glass-card
              transition-all duration-700 delay-100
              ${splitState === 'left' ? 'scale-105 shadow-2xl shadow-organic-sage/20' : 'scale-100'}
            `}>
               <img 
-                src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=1887&auto=format&fit=crop" 
+                src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=1887&auto=format&fit=crop" 
                 alt="Leon Feldmeier"
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-organic-sage/80 via-transparent to-transparent opacity-40"></div>
               <div className="absolute bottom-8 left-8 right-8 text-center glass-panel rounded-xl py-4 px-4 shadow-sm">
                 <p className="font-sans font-medium text-[10px] tracking-[0.25em] text-organic-charcoal uppercase leading-none">
-                  "Kunst ist der Spiegel"
+                  "Tiefe schafft Klarheit"
                 </p>
               </div>
            </div>
+
+           {/* Leons Pfad Button below Photo */}
+           <div className="mt-8 flex justify-center lg:justify-end">
+              <button 
+                onClick={() => setShowLeonBio(!showLeonBio)}
+                className="group/btn relative px-8 py-3 bg-organic-charcoal text-white rounded-full font-medium overflow-hidden transition-all hover:bg-black hover:shadow-lg hover:shadow-organic-sage/20"
+              >
+                <span className="relative z-10 flex items-center gap-2 text-sm tracking-widest uppercase">
+                  Leons Pfad {showLeonBio ? <X size={14} /> : <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />}
+                </span>
+              </button>
+           </div>
+
+           {/* Expanded Bio Section */}
+           {showLeonBio && (
+             <div className="mt-8 p-8 glass-panel rounded-3xl text-left animate-slide-up border border-organic-sage/30">
+                <h3 className="font-serif text-2xl mb-6 text-organic-charcoal">Wer ich bin: Leon Feldmeier, dein Begleiter für Veränderung.</h3>
+                <div className="space-y-4 text-organic-text font-light leading-relaxed">
+                  <p>Hallo, ich bin Leon Feldmeier. Mein eigener Weg verlief alles andere als geradlinig. Das Studium der Musik und Sprache, Jahre in der Eventbranche sowie die tägliche Begleitung von Menschen in herausfordernden Lebenssituationen haben meinen Blick für das Wesentliche geschärft.</p>
+                  <p>Diese Erfahrungen helfen mir heute dabei, dich jenseits von Standardschemata zu verstehen. Ich weiß aus eigener Erfahrung, dass echte Entwicklung Zeit braucht und dass der Mut zur Lücke oft der Anfang von etwas völlig Neuem ist.</p>
+                  <p>Meine Ausbildung zum systemischen Coach am INEKO Institut an der Universität zu Köln bildet das fundierte Fundament meiner Arbeit. Ich biete dir einen geschützten Raum für deine Themen. Gemeinsam schauen wir auf das Zusammenspiel deiner Überzeugungen und Ziele, um Blockaden zu lösen und verborgene Ressourcen zu aktivieren. Mein Ansatz ist wertschätzend, klar und immer auf Augenhöhe.</p>
+                </div>
+             </div>
+           )}
         </div>
       </div>
 
-      {/* SIMON KUHN - Right Side (Sky/Leadership) */}
+      {/* SIMON KUHN - Right Side */}
       <div 
         className={`
           relative flex flex-col justify-center items-center lg:items-start px-6 lg:px-20 py-20 lg:py-0
@@ -94,7 +108,6 @@ const HeroSplit: React.FC = () => {
         onMouseEnter={() => setSplitState('right')}
         onMouseLeave={() => setSplitState('neutral')}
       >
-        {/* Background Overlay for Simon - Sky */}
         <div className={`absolute inset-0 bg-gradient-to-bl from-organic-sky/60 to-transparent opacity-0 transition-opacity duration-700 ${splitState === 'right' ? 'opacity-100' : ''}`} />
 
         <div className={`relative z-10 max-w-lg text-center lg:text-left transition-all duration-500 ${getOpacityClass('right')}`}>
@@ -121,7 +134,6 @@ const HeroSplit: React.FC = () => {
             <span className="text-xs text-organic-textLight uppercase tracking-widest">Executive Coaching</span>
           </div>
 
-           {/* Floating Image Card Effect */}
            <div className={`
              mt-12 w-full aspect-[3/4] max-w-[320px] mx-auto lg:mx-0 lg:mr-auto
              rounded-2xl overflow-hidden relative
