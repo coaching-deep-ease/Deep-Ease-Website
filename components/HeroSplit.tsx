@@ -59,7 +59,7 @@ const HeroSplit: React.FC = () => {
              ${splitState === 'left' ? 'scale-105 shadow-2xl shadow-organic-sage/20' : 'scale-100'}
            `}>
               <img 
-                src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=1887&auto=format&fit=crop" 
+                src="/profil-Leon Feldmeier1.jpg
                 alt="Leon Feldmeier"
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
               />
