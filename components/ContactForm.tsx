@@ -12,9 +12,24 @@ const ContactForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate inquiry
-    console.log('Sending inquiry to coaching@deep-ease.com', formData);
-    setIsSubmitted(true);
+
+    // Das ist die Logik, die die Daten an Netlify sendet
+    const encode = (data: any) => {
+      return Object.keys(data)
+        .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+        .join("&");
+    };
+
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: encode({ "form-name": "contact", ...formData })
+    })
+      .then(() => {
+        setIsSubmitted(true);
+        console.log('Anfrage erfolgreich gesendet');
+      })
+      .catch(error => alert("Fehler beim Senden: " + error));
   };
 
   if (isSubmitted) {
@@ -46,12 +61,22 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div className="glass-panel rounded-3xl p-8 md:p-16 border border-white/60 shadow-xl shadow-black/[0.02]">
-          <form onSubmit={handleSubmit} className="space-y-10">
+          {/* Hier wurden die Attribute name und data-netlify hinzugefügt */}
+          <form 
+            onSubmit={handleSubmit} 
+            name="contact" 
+            data-netlify="true" 
+            className="space-y-10"
+          >
+            {/* Wichtig für Netlify Bot-Erkennung */}
+            <input type="hidden" name="form-name" value="contact" />
+
             <div className="grid md:grid-cols-2 gap-10">
               <div className="space-y-3">
                 <label className="text-[10px] uppercase tracking-[0.2em] text-organic-textLight font-semibold ml-1">Dein Name</label>
                 <input 
                   required
+                  name="name"
                   type="text" 
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
@@ -63,6 +88,7 @@ const ContactForm: React.FC = () => {
                 <label className="text-[10px] uppercase tracking-[0.2em] text-organic-textLight font-semibold ml-1">Deine E-Mail-Adresse</label>
                 <input 
                   required
+                  name="email"
                   type="email" 
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -76,6 +102,7 @@ const ContactForm: React.FC = () => {
               <label className="text-[10px] uppercase tracking-[0.2em] text-organic-textLight font-semibold ml-1">Worum geht es dir im Kern?</label>
               <input 
                 required
+                name="concern"
                 type="text" 
                 value={formData.concern}
                 onChange={(e) => setFormData({...formData, concern: e.target.value})}
@@ -86,6 +113,7 @@ const ContactForm: React.FC = () => {
 
             <div className="space-y-5">
               <label className="text-[10px] uppercase tracking-[0.2em] text-organic-textLight font-semibold ml-1 block">Präferenz (Optional)</label>
+              <input type="hidden" name="preference" value={formData.preference} />
               <div className="flex flex-wrap gap-3">
                 {['Vormittags', 'Nachmittags', 'Abends'].map((pref) => (
                   <button
