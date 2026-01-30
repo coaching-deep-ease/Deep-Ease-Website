@@ -11,15 +11,15 @@ const services = [
   },
   {
     icon: <Target className="text-organic-skyDark" />,
-    title: "Executive Strategie",
-    desc: "High-Impact Sessions mit Simon. Fokus auf Entscheidungs-Frameworks, Skalierungslogik und Führungspräsenz.",
+    title: "Own Your Leadership",
+    desc: "Coaching für Führungskräfte, die ihre eigene Leadership Identity entwickeln wollen. Klar in der Rolle. Authentisch im Führungsstil. Wirksam im Team.",
     coach: "Simon",
     theme: "sky"
   },
   {
     icon: <Users className="text-organic-skyDark" />,
-    title: "Team Architektur",
-    desc: "Workshops zur Diagnose von Kommunikationsstörungen und zum Wiederaufbau einer Hochleistungskultur im Team.",
+    title: "Evolving Teams",
+    desc: "Teams verändern sich ständig, ebenso wie ihre Dynamik. Wir richten den Blick auf Menschen, ihre Stärken und das Zusammenspiel im Team. Coaching unterstützt dabei, individuelle Potenziale gezielt einzusetzen und ein nachhaltiges, positives Arbeitsklima zu gestalten.",
     coach: "Simon",
     theme: "sky"
   },
@@ -40,7 +40,7 @@ const Services: React.FC = () => {
           <span className="text-organic-textLight text-sm tracking-[0.3em] uppercase mb-4 block font-medium">Unser Angebot</span>
           <h2 className="text-4xl md:text-5xl font-serif font-medium mb-6 text-organic-charcoal">Tiefe & Klarheit</h2>
           <p className="text-organic-text max-w-2xl mx-auto font-light leading-relaxed">
-            Ob du deinen inneren Kompass neu justieren oder eine unternehmerische Eroberung planen willst – unser dualer Ansatz deckt das gesamte Spektrum menschlichen Potenzials ab.
+            Ob du deinen inneren Kompass neu justieren oder die volle Kraft deines Unternehmens ausschöpfen willst – unser dualer Ansatz deckt das gesamte Spektrum menschlichen Potenzials ab.
           </p>
         </div>
 
@@ -65,9 +65,6 @@ const Services: React.FC = () => {
 
               <div className="flex items-center justify-between border-t border-organic-charcoal/5 pt-6 mt-auto">
                 <span className="text-xs uppercase tracking-widest text-organic-textLight font-medium">Mit {service.coach}</span>
-                <button className={`text-sm font-medium transition-colors flex items-center gap-2 ${service.theme === 'sage' ? 'text-organic-sageDark hover:text-organic-charcoal' : 'text-organic-skyDark hover:text-organic-charcoal'}`}>
-                  Details <span className="text-lg">→</span>
-                </button>
               </div>
             </div>
           ))}

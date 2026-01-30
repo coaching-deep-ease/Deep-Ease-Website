@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deep Ease | Ganzheitliches & Führungs-Coaching</title>
     
+    <!-- External CSS -->
     <link rel="stylesheet" href="styles.css" />
     
+    <!-- Tailwind CSS (CDN for runtime compilation) -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Tailwind Configuration -->
     <script>
       tailwind.config = {
         theme: {
@@ -16,6 +19,7 @@
             fontFamily: {
               sans: ['Outfit', 'sans-serif'],
               serif: ['Playfair Display', 'serif'],
+              cursive: ['Cormorant Garamond', 'serif'],
             },
             colors: {
               organic: {
@@ -60,6 +64,7 @@
       }
     </script>
     
+    <!-- React Import Map -->
     <script type="importmap">
     {
       "imports": {
@@ -73,14 +78,7 @@
   </head>
   <body>
     <div id="root"></div>
-
-    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
-      <input type="text" name="name" />
-      <input type="email" name="email" />
-      <input type="text" name="concern" />
-      <input type="text" name="preference" />
-    </form>
-
+    <!-- Application Entry -->
     <script type="module" src="index.tsx"></script>
   </body>
 </html>

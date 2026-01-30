@@ -4,6 +4,8 @@ import { Menu, X } from 'lucide-react';
 const Navigation: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hoverDesktop, setHoverDesktop] = useState(false);
+  const [hoverMobile, setHoverMobile] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,16 +19,55 @@ const Navigation: React.FC = () => {
     { label: 'Philosophie', href: '#philosophie' },
     { label: 'Coaches', href: '#coaches' },
     { label: 'Angebote', href: '#services' },
-    { label: 'Stimmen', href: '#testimonials' },
+    { label: 'Erfahrungen', href: '#testimonials' },
+    { label: 'Kontakt', href: '#anfrage' },
   ];
 
-  const scrollToContact = () => {
-    const element = document.getElementById('anfrage');
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
       setMobileMenuOpen(false);
+      
+      // Calculate offset for fixed header
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   };
+
+  const handleLogoClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setMobileMenuOpen(false);
+  };
+
+  const getButtonStyle = (isHovered: boolean, isMobile: boolean = false): React.CSSProperties => ({
+    background: isHovered ? '#FFFFFF' : '#FFF9E6', // White on Hover, Light Pastel Yellow-Orange Default
+    borderRadius: '50px',
+    color: '#1A1A1A', // Always Black/Dark Charcoal
+    fontWeight: '600',
+    border: '1px solid rgba(0,0,0,0.02)', // Very subtle border for definition
+    padding: isMobile ? '16px' : '12px 24px',
+    // Shiny Effect replaced with softer warm/neutral shadows
+    boxShadow: isHovered 
+      ? '0 6px 20px rgba(0, 0, 0, 0.08)' 
+      : '0 4px 15px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255,255,255,0.8)',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.3s ease',
+    whiteSpace: 'nowrap',
+    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+    width: isMobile ? '100%' : 'auto',
+  });
 
   return (
     <nav 
@@ -36,9 +77,8 @@ const Navigation: React.FC = () => {
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
-        <div className="flex items-center gap-2 group cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
+        <div className="flex items-center gap-2 group cursor-pointer" onClick={handleLogoClick}>
           <div className="w-8 h-8 rounded-full border border-organic-charcoal/20 flex items-center justify-center group-hover:border-organic-charcoal/50 transition-colors">
-             {/* Gradient Pill Logo */}
             <div className="w-1 h-4 bg-gradient-to-b from-organic-sageDark to-organic-skyDark rounded-full"></div>
           </div>
           <span className="text-xl font-sans tracking-[0.2em] font-light text-organic-charcoal transition-all">
@@ -46,23 +86,29 @@ const Navigation: React.FC = () => {
           </span>
         </div>
 
-        {/* Desktop Links */}
+        {/* Desktop Links & Main CTA */}
         <div className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
-            <a 
-              key={item.label} 
-              href={item.href} 
-              className="text-sm font-light text-organic-text hover:text-organic-charcoal transition-colors tracking-wide relative group"
-            >
-              {item.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-organic-charcoal transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          ))}
+          <div className="flex items-center gap-8">
+            {navItems.map((item) => (
+              <a 
+                key={item.label} 
+                href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="text-sm font-light text-organic-text hover:text-organic-charcoal transition-colors tracking-wide relative group"
+              >
+                {item.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-organic-charcoal transition-all duration-300 group-hover:w-full"></span>
+              </a>
+            ))}
+          </div>
+          
           <button 
-            onClick={scrollToContact}
-            className="px-6 py-2.5 bg-organic-charcoal text-white rounded-full text-xs font-medium tracking-widest hover:bg-black hover:scale-105 transition-all duration-300 shadow-lg shadow-black/5"
+            onClick={(e) => handleNavClick(e, '#anfrage')}
+            style={getButtonStyle(hoverDesktop)}
+            onMouseEnter={() => setHoverDesktop(true)}
+            onMouseLeave={() => setHoverDesktop(false)}
           >
-            GESPRÄCH VEREINBAREN
+            Gespräch vereinbaren
           </button>
         </div>
 
@@ -79,22 +125,24 @@ const Navigation: React.FC = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-organic-cream/95 backdrop-blur-xl border-b border-black/5 p-8 flex flex-col gap-6 animate-fade-in shadow-xl">
+        <div className="md:hidden absolute top-full left-0 w-full bg-organic-cream/95 backdrop-blur-xl border-b border-black/5 p-8 flex flex-col gap-6 animate-fade-in shadow-xl h-screen">
            {navItems.map((item) => (
             <a 
               key={item.label} 
               href={item.href}
               className="text-2xl font-serif text-organic-charcoal"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => handleNavClick(e, item.href)}
             >
               {item.label}
             </a>
           ))}
           <button 
-            onClick={scrollToContact}
-            className="w-full py-4 mt-4 bg-organic-charcoal text-white rounded-lg text-sm font-medium tracking-widest hover:bg-black transition-all"
+            onClick={(e) => handleNavClick(e, '#anfrage')}
+            style={getButtonStyle(hoverMobile, true)}
+            onMouseEnter={() => setHoverMobile(true)}
+            onMouseLeave={() => setHoverMobile(false)}
           >
-            GESPRÄCH VEREINBAREN
+            Gespräch vereinbaren
           </button>
         </div>
       )}
