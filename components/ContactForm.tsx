@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, CheckCircle } from 'lucide-react';
+import { Send, CheckCircle, Calendar, Clock } from 'lucide-react';
 
 const ContactForm: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -7,27 +7,69 @@ const ContactForm: React.FC = () => {
     name: '',
     email: '',
     concern: '',
-    preference: ''
   });
+
+  // Verfügbarkeits-Struktur: { 'Montag': ['10:00', '11:00'], ... }
+  const [availability, setAvailability] = useState<Record<string, string[]>>({});
+
+  const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
+  const hours = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+
+  const toggleDay = (day: string) => {
+    setAvailability(prev => {
+      const newAvail = { ...prev };
+      if (newAvail[day]) {
+        delete newAvail[day];
+      } else {
+        newAvail[day] = [];
+      }
+      return newAvail;
+    });
+  };
+
+  const toggleTime = (day: string, time: string) => {
+    setAvailability(prev => {
+      const dayTimes = prev[day] || [];
+      const newDayTimes = dayTimes.includes(time)
+        ? dayTimes.filter(t => t !== time)
+        : [...dayTimes, time];
+      
+      return {
+        ...prev,
+        [day]: newDayTimes
+      };
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Das ist die Logik, die die Daten an Netlify sendet
+    // Verfügbarkeit in lesbaren String umwandeln für Netlify
+    // Added type assertion to Object.entries to fix 'unknown' type error for times on lines 49 and 50
+    const availabilityString = (Object.entries(availability) as [string, string[]][])
+      .filter(([_, times]) => times.length > 0)
+      .map(([day, times]) => `${day}: ${times.join(', ')}`)
+      .join(' | ');
+
     const encode = (data: any) => {
       return Object.keys(data)
         .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
         .join("&");
     };
 
+    const submissionData = {
+      ...formData,
+      "form-name": "contact",
+      "availability": availabilityString || "Keine Präferenz angegeben"
+    };
+
     fetch("/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: encode({ "form-name": "contact", ...formData })
+      body: encode(submissionData)
     })
       .then(() => {
         setIsSubmitted(true);
-        console.log('Anfrage erfolgreich gesendet');
       })
       .catch(error => alert("Fehler beim Senden: " + error));
   };
@@ -61,14 +103,12 @@ const ContactForm: React.FC = () => {
         </div>
 
         <div className="glass-panel rounded-3xl p-8 md:p-16 border border-white/60 shadow-xl shadow-black/[0.02]">
-          {/* Hier wurden die Attribute name und data-netlify hinzugefügt */}
           <form 
             onSubmit={handleSubmit} 
             name="contact" 
             data-netlify="true" 
             className="space-y-10"
           >
-            {/* Wichtig für Netlify Bot-Erkennung */}
             <input type="hidden" name="form-name" value="contact" />
 
             <div className="grid md:grid-cols-2 gap-10">
@@ -111,23 +151,55 @@ const ContactForm: React.FC = () => {
               />
             </div>
 
-            <div className="space-y-5">
-              <label className="text-[10px] uppercase tracking-[0.2em] text-organic-textLight font-semibold ml-1 block">Präferenz (Optional)</label>
-              <input type="hidden" name="preference" value={formData.preference} />
-              <div className="flex flex-wrap gap-3">
-                {['Vormittags', 'Nachmittags', 'Abends'].map((pref) => (
+            {/* Termin-Sektion */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-2 ml-1">
+                <Calendar size={14} className="text-organic-textLight" />
+                <label className="text-[10px] uppercase tracking-[0.2em] text-organic-textLight font-semibold">Mögliche Termine (Mo - Fr)</label>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {days.map((day) => (
                   <button
-                    key={pref}
+                    key={day}
                     type="button"
-                    onClick={() => setFormData({...formData, preference: pref})}
-                    className={`px-8 py-2.5 rounded-full text-xs tracking-wider transition-all duration-300 border ${
-                      formData.preference === pref 
-                      ? 'bg-organic-charcoal text-white border-organic-charcoal shadow-lg shadow-black/5' 
+                    onClick={() => toggleDay(day)}
+                    className={`px-5 py-2.5 rounded-full text-xs tracking-wider transition-all duration-300 border ${
+                      availability[day] !== undefined
+                      ? 'bg-organic-charcoal text-white border-organic-charcoal' 
                       : 'bg-white/50 border-organic-charcoal/5 text-organic-textLight hover:border-organic-charcoal/20'
                     }`}
                   >
-                    {pref}
+                    {day}
                   </button>
+                ))}
+              </div>
+
+              {/* Zeit-Slots für ausgewählte Tage */}
+              <div className="space-y-6">
+                {days.map((day) => availability[day] !== undefined && (
+                  <div key={`${day}-times`} className="animate-slide-up bg-white/30 rounded-2xl p-6 border border-white/40 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Clock size={12} className="text-organic-textLight" />
+                      <span className="text-[10px] uppercase tracking-[0.1em] text-organic-text font-medium">{day}s Uhrzeiten:</span>
+                    </div>
+                    <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2">
+                      {hours.map((hour) => (
+                        <button
+                          key={`${day}-${hour}`}
+                          type="button"
+                          onClick={() => toggleTime(day, hour)}
+                          className={`py-2 rounded-lg text-[10px] font-medium transition-all duration-200 border ${
+                            availability[day]?.includes(hour)
+                            ? 'bg-organic-sageDark text-white border-organic-sageDark shadow-sm' 
+                            : 'bg-white/60 border-black/5 text-organic-textLight hover:bg-white'
+                          }`}
+                        >
+                          {hour}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
