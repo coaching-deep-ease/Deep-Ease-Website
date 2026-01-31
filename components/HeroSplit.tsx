@@ -16,7 +16,8 @@ const HeroSplit: React.FC = () => {
   const getOpacityClass = (side: 'left' | 'right') => {
     if (splitState === 'neutral') return 'opacity-100';
     if (splitState === side) return 'opacity-100';
-    return 'opacity-50 hover:opacity-70 grayscale-[50%] hover:grayscale-0';
+    // Reduzierte Grayscale und höhere Opacity für bessere visuelle Qualität im Ruhemodus
+    return 'opacity-80 hover:opacity-100 grayscale-[20%] hover:grayscale-0';
   };
 
   // Common glass button style
@@ -67,9 +68,15 @@ const HeroSplit: React.FC = () => {
              style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
            >
               <img 
-                src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=1887&auto=format&fit=crop" 
+                src="https://res.cloudinary.com/dgwme3a8e/image/upload/v1769863464/Leon_Lightning_Low_uhj2sk.jpg" 
                 alt="Leon Feldmeier"
-                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
+                className="w-full h-full object-cover transition-opacity duration-700 image-sharp"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (!target.src.includes('images.unsplash.com')) {
+                    target.src = "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=1887&auto=format&fit=crop";
+                  }
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-organic-sage/80 via-transparent to-transparent opacity-40"></div>
               <div className="absolute bottom-8 left-8 right-8 text-center bg-white/60 backdrop-blur-md border border-white/40 rounded-xl py-4 px-4 shadow-sm">
@@ -147,9 +154,15 @@ const HeroSplit: React.FC = () => {
              style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
            >
               <img 
-                src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1740&auto=format&fit=crop" 
+                src="https://res.cloudinary.com/dgwme3a8e/image/upload/v1769863465/Simon_Lightning_Low_czuhay.jpg" 
                 alt="Simon Kuhn"
-                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700"
+                className="w-full h-full object-cover transition-opacity duration-700 image-sharp"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  if (!target.src.includes('images.unsplash.com')) {
+                    target.src = "https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1740&auto=format&fit=crop";
+                  }
+                }}
               />
                <div className="absolute inset-0 bg-gradient-to-t from-organic-sky/80 via-transparent to-transparent opacity-40"></div>
                <div className="absolute bottom-8 left-8 right-8 text-center bg-white/60 backdrop-blur-md border border-white/40 rounded-xl py-4 px-4 shadow-sm">
@@ -176,7 +189,7 @@ const HeroSplit: React.FC = () => {
              <div className="mt-8 p-8 glass-panel rounded-3xl text-left animate-slide-up border border-organic-sky/30">
                 <h3 className="font-serif text-2xl mb-6 text-organic-charcoal">Ich bin Simon, systemischer Coach und seit vielen Jahren in Führungs- und Entwicklungsprozessen tätig.</h3>
                 <div className="space-y-4 text-organic-text font-light leading-relaxed">
-                  <p>In meinen frühen zwanzigern durfte ich schon Verantwortung übernehmen und Teams mit über 15 Mitarbeitenden führen. Dabei ging es für mich nie nur um Zahlen oder Ergebnisse, sondern immer um die Menschen dahinter. Teams, die ich begleitet habe, waren nachhaltig erfolgreich und vor allem Teams, in denen Menschen gerne gearbeitet und sich weiterentwickelt haben.</p>
+                  <p>In meinen frühen zwanzigern durfte ich schon Verantwortung übernehmen und Teams mit über 15 Mitarbeitenden führen. Dabei ging es für mich nie nur um Zahlen oder Ergebnisse, sondern immer um die Menschen dahinter. Teams, in denen Menschen gerne gearbeitet und sich weiterentwickelt haben.</p>
                   <p>Meine Arbeit ist geprägt von der Überzeugung, dass gute Führung dort entsteht, wo Menschen als Individuen gesehen werden. Unterschiedliche Persönlichkeiten, Stärken und Bedürfnisse ernst zu nehmen und gezielt zu fördern, ist für mich der Schlüssel zu wirksamer Zusammenarbeit.</p>
                   <p>Fundiert wird meine praktische Erfahrung durch meine Ausbildung zum zertifizierten systemischen Coach am INEKO Institut in Köln sowie durch meine NLP-Practitioner-Ausbildung. Heute verbinde ich über sieben Jahre Führungserfahrung mit systemischem Coaching und einem klaren Blick auf Teamdynamiken.</p>
                   <p>Nicht Perfektion ist das Ziel, sondern Wirksamkeit. Für Führungskräfte, für Teams und für jede einzelne Person darin.</p>

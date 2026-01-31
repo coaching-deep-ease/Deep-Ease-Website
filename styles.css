@@ -68,6 +68,14 @@ html {
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
 }
 
+/* Image Sharpening Utility */
+.image-sharp {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 /* 
    ZUWEISUNG CALL-TO-ACTION BUTTON (Navigation & Global)
    Specs: Gradient #08AEEA -> #2AF598, Rund (50px), Weißer Text, Bold (600).
