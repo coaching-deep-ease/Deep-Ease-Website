@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const testimonials = [
@@ -66,60 +66,76 @@ const testimonials = [
 
 const Testimonials: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerSlide, setItemsPerSlide] = useState(1);
+
+  // Handle resize logic to switch between 1 item (Mobile/Tablet) and 3 items (Desktop)
+  useEffect(() => {
+    const handleResize = () => {
+      // Switch to 3 items only on Large screens (lg = 1024px)
+      // This ensures tablets (<1024px) show 1 item
+      setItemsPerSlide(window.innerWidth >= 1024 ? 3 : 1);
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const maxIndex = testimonials.length; // Loop logic handles overflow
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    setCurrentIndex((prev) => (prev + 1) % maxIndex);
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setCurrentIndex((prev) => (prev - 1 + maxIndex) % maxIndex);
   };
-
-  // We show 3 items at a time on desktop, 1 on mobile. 
-  // However, for the "wave" carousel feel, we render a window.
   
   return (
-    <section id="testimonials" className="relative py-32 px-6 overflow-hidden">
+    <section id="testimonials" className="relative py-32 px-4 md:px-6 overflow-hidden">
       {/* Background Decor */}
       <div className="absolute left-0 top-1/4 w-full h-1/2 -skew-y-3 bg-white/40 -z-10"></div>
 
       <div className="container mx-auto max-w-7xl relative">
-        <h2 className="text-3xl md:text-5xl font-serif text-center mb-20 text-organic-charcoal">Was Klienten sagen</h2>
+        <h2 className="text-3xl md:text-5xl font-serif text-center mb-12 md:mb-20 text-organic-charcoal">Was Klienten sagen</h2>
         
-        {/* Navigation Arrows */}
+        {/* Navigation Arrows - Adjusted for better mobile tap targets */}
         <button 
           onClick={prevSlide}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-organic-charcoal/10 flex items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg text-organic-charcoal"
+          className="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/80 backdrop-blur-md border border-organic-charcoal/10 flex items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg text-organic-charcoal"
           aria-label="Previous testimonial"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft size={20} className="md:w-6 md:h-6" />
         </button>
 
         <button 
           onClick={nextSlide}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/80 backdrop-blur-md border border-organic-charcoal/10 flex items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg text-organic-charcoal"
+          className="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/80 backdrop-blur-md border border-organic-charcoal/10 flex items-center justify-center hover:bg-white hover:scale-110 transition-all shadow-lg text-organic-charcoal"
           aria-label="Next testimonial"
         >
-          <ChevronRight size={24} />
+          <ChevronRight size={20} className="md:w-6 md:h-6" />
         </button>
 
         {/* Carousel Window */}
-        <div className="overflow-hidden py-12 -my-12 px-12 md:px-16">
+        <div className="overflow-hidden py-12 -my-12 px-0 md:px-12 lg:px-16">
           <div 
-            className="flex gap-8 transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-            style={{ transform: `translateX(-${currentIndex * (100 / (window.innerWidth < 768 ? 1 : 3))}%)` }}
+            className="flex transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+            style={{ transform: `translateX(-${currentIndex * (100 / itemsPerSlide)}%)` }}
           >
             {testimonials.map((t, i) => (
               <div 
                 key={i} 
                 className={`
-                  flex-shrink-0 w-full md:w-[calc(33.333%-1.33rem)]
+                  flex-shrink-0 
+                  w-full lg:w-1/3
+                  px-4
                   transition-all duration-500
-                  ${i % 2 !== 0 ? 'md:translate-y-12' : 'md:translate-y-0'} 
+                  ${i % 2 !== 0 ? 'lg:translate-y-12' : 'lg:translate-y-0'} 
                 `}
               >
                 <div className={`
                   glass-card p-8 md:p-10 rounded-3xl relative h-full flex flex-col
+                  mx-auto max-w-md lg:max-w-none
                   hover:shadow-xl transition-shadow duration-500
                 `}>
                   <Quote className={`w-8 h-8 mb-6 opacity-40 ${t.theme === 'sage' ? 'text-organic-sageDark' : t.theme === 'sky' ? 'text-organic-skyDark' : 'text-organic-charcoal'}`} />
@@ -146,7 +162,7 @@ const Testimonials: React.FC = () => {
         </div>
 
         {/* Dots Indicator */}
-        <div className="flex justify-center gap-2 mt-12">
+        <div className="flex justify-center gap-2 mt-8 md:mt-12">
           {testimonials.map((_, i) => (
              <button
                key={i}

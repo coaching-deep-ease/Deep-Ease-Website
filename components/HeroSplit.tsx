@@ -138,7 +138,7 @@ const HeroSplit: React.FC = () => {
 
            <div 
              className={`
-               w-full aspect-[3/4] max-w-[320px] mx-auto lg:mx-0 lg:ml-auto
+               w-full aspect-[3/4] max-w-[320px] mx-auto lg:mx-0 lg:mr-auto
                rounded-2xl overflow-hidden relative
                bg-white/70 backdrop-blur-md border border-white/80 shadow-sm
                transition-all duration-700 delay-100 transform-gpu

@@ -78,7 +78,7 @@ const Navigation: React.FC = () => {
       <div className="container mx-auto px-6 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center gap-2 group cursor-pointer" onClick={handleLogoClick}>
-          <div className="w-8 h-8 rounded-full border border-organic-charcoal/20 flex items-center justify-center group-hover:border-organic-charcoal/50 transition-colors">
+          <div className="w-8 h-8 rounded-full border border-organic-charcoal/20 flex items-center justify-center group-hover:border-organic-charcoal/50 transition-colors flex-shrink-0">
             <div className="w-1 h-4 bg-gradient-to-b from-organic-sageDark to-organic-skyDark rounded-full"></div>
           </div>
           <span className="text-xl font-sans tracking-[0.2em] font-light text-organic-charcoal transition-all">

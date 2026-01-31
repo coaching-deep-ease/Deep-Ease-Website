@@ -17,18 +17,18 @@ const services = [
     theme: "sky"
   },
   {
-    icon: <Users className="text-organic-skyDark" />,
-    title: "Evolving Teams",
-    desc: "Teams verändern sich ständig, ebenso wie ihre Dynamik. Wir richten den Blick auf Menschen, ihre Stärken und das Zusammenspiel im Team. Coaching unterstützt dabei, individuelle Potenziale gezielt einzusetzen und ein nachhaltiges, positives Arbeitsklima zu gestalten.",
-    coach: "Simon",
-    theme: "sky"
-  },
-  {
     icon: <ShieldCheck className="text-organic-sageDark" />,
     title: "Resilienz im Wandel",
     desc: "Schwierige Lebensphasen fordern uns heraus. Mit systemischen Methoden unterstütze ich dich dabei neue Perspektiven einzunehmen und innere Stärke aufzubauen um Krisen in echte Chancen zur Weiterentwicklung zu verwandeln.",
     coach: "Leon",
     theme: "sage"
+  },
+  {
+    icon: <Users className="text-organic-skyDark" />,
+    title: "Evolving Teams",
+    desc: "Teams verändern sich ständig, ebenso wie ihre Dynamik. Wir richten den Blick auf Menschen, ihre Stärken und das Zusammenspiel im Team. Coaching unterstützt dabei, individuelle Potenziale gezielt einzusetzen und ein nachhaltiges, positives Arbeitsklima zu gestalten.",
+    coach: "Simon",
+    theme: "sky"
   }
 ];
 
@@ -57,7 +57,7 @@ const Services: React.FC = () => {
                   {service.icon}
                 </div>
                 
-                <h3 className="text-2xl font-serif mb-4 text-organic-charcoal">{service.title}</h3>
+                <h3 className="text-2xl font-serif font-semibold mb-4 text-organic-charcoal">{service.title}</h3>
                 <p className="text-organic-text/80 font-light leading-relaxed mb-8">
                   {service.desc}
                 </p>
