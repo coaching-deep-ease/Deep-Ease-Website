@@ -135,8 +135,9 @@ const HeroSplit: React.FC = () => {
       
       {/* LEON FELDMEIER - Left Side */}
       <div 
+        id="leon-profile"
         className={`
-          relative flex flex-col items-center lg:items-end px-6 lg:px-20 pt-10 pb-20 lg:py-20 lg:pt-56
+          relative flex flex-col items-center lg:items-end px-6 lg:px-20 pt-10 pb-20 lg:py-16 lg:pt-4
           transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]
           border-b lg:border-b-0 border-organic-charcoal/5
           group
@@ -227,8 +228,9 @@ const HeroSplit: React.FC = () => {
 
       {/* SIMON KUHN - Right Side */}
       <div 
+        id="simon-profile"
         className={`
-          relative flex flex-col items-center lg:items-start px-6 lg:px-20 py-20 lg:pb-20 lg:pt-56
+          relative flex flex-col items-center lg:items-start px-6 lg:px-20 py-20 lg:pb-20 lg:pt-4
           transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]
           group
           justify-start

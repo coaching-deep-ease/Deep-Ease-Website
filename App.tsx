@@ -2,6 +2,7 @@ import React from 'react';
 import AuroraBackground from './components/AuroraBackground';
 import Navigation from './components/Navigation';
 import HeroSplit from './components/HeroSplit';
+import ThemeHero from './components/ThemeHero';
 import IntroHeader from './components/IntroHeader';
 import Services from './components/Services';
 import Testimonials from './components/Testimonials';
@@ -16,10 +17,16 @@ function App() {
       <Navigation />
       
       <main>
+        {/* Desktop Header */}
         <IntroHeader />
+        
+        {/* Mobil/Tablet Gateway Navigation */}
+        <ThemeHero />
+        
+        {/* Die Hauptprofile-Sektion (bleibt auf Desktop wie gewohnt, dient auf Mobile als Ziel) */}
         <HeroSplit />
         
-        {/* Quote Interstitial - Philosophy */}
+        {/* Quote Interstitial - Philosophie */}
         <section id="philosophie" className="py-32 px-6 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-white/30 -z-10 backdrop-blur-sm"></div>
           <div className="container mx-auto max-w-4xl">

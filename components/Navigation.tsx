@@ -6,14 +6,25 @@ const Navigation: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoverDesktop, setHoverDesktop] = useState(false);
   const [hoverMobile, setHoverMobile] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
+
+  const isTablet = windowWidth >= 768 && windowWidth < 1024;
 
   const navItems = [
     { label: 'Philosophie', href: '#philosophie' },
@@ -31,7 +42,6 @@ const Navigation: React.FC = () => {
     if (element) {
       setMobileMenuOpen(false);
       
-      // Calculate offset for fixed header
       const headerOffset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -48,26 +58,39 @@ const Navigation: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
-  const getButtonStyle = (isHovered: boolean, isMobile: boolean = false): React.CSSProperties => ({
-    background: isHovered ? '#FFFFFF' : '#FFF9E6', // White on Hover, Light Pastel Yellow-Orange Default
-    borderRadius: '50px',
-    color: '#1A1A1A', // Always Black/Dark Charcoal
-    fontWeight: '600',
-    border: '1px solid rgba(0,0,0,0.02)', // Very subtle border for definition
-    padding: isMobile ? '16px' : '12px 24px',
-    // Shiny Effect replaced with softer warm/neutral shadows
-    boxShadow: isHovered 
-      ? '0 6px 20px rgba(0, 0, 0, 0.08)' 
-      : '0 4px 15px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255,255,255,0.8)',
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.3s ease',
-    whiteSpace: 'nowrap',
-    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-    width: isMobile ? '100%' : 'auto',
-  });
+  const getButtonStyle = (isHovered: boolean, isMobile: boolean = false): React.CSSProperties => {
+    // Determine responsive sizing
+    let padding = '12px 24px';
+    let fontSize = '14px';
+
+    if (isMobile) {
+      padding = '16px';
+    } else if (isTablet) {
+      padding = '8px 16px'; // Smaller for tablets
+      fontSize = '12px';    // Smaller for tablets
+    }
+
+    return {
+      background: isHovered ? '#FFFFFF' : '#FFF9E6',
+      borderRadius: '50px',
+      color: '#1A1A1A',
+      fontWeight: '600',
+      border: '1px solid rgba(0,0,0,0.02)',
+      padding: padding,
+      fontSize: fontSize,
+      boxShadow: isHovered 
+        ? '0 6px 20px rgba(0, 0, 0, 0.08)' 
+        : '0 4px 15px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255,255,255,0.8)',
+      cursor: 'pointer',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'all 0.3s ease',
+      whiteSpace: 'nowrap',
+      transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+      width: isMobile ? '100%' : 'auto',
+    };
+  };
 
   return (
     <nav 
@@ -87,8 +110,8 @@ const Navigation: React.FC = () => {
         </div>
 
         {/* Desktop Links & Main CTA */}
-        <div className="hidden md:flex items-center gap-8">
-          <div className="flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-5 lg:gap-8">
+          <div className="flex items-center gap-5 lg:gap-8">
             {navItems.map((item) => (
               <a 
                 key={item.label} 
