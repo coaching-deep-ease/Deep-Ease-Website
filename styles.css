@@ -1,5 +1,5 @@
 /* Font Imports */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=Outfit:wght@200;300;400;500;600&family=Playfair Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=Outfit:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
 /* Base Settings */
 body {
@@ -21,9 +21,14 @@ h1, h2, h3, h4, h5, h6 {
   font-style: italic;
 }
 
-/* Smooth Scrolling */
+/* Smooth Scrolling & Offsets */
 html {
   scroll-behavior: smooth;
+}
+
+/* Stellt sicher, dass Sektionen nicht hinter dem Header landen */
+[id] {
+  scroll-margin-top: 100px;
 }
 
 /* Custom Scrollbar */
@@ -78,7 +83,6 @@ html {
 
 /* 
    ZUWEISUNG CALL-TO-ACTION BUTTON (Navigation & Global)
-   Specs: Gradient #08AEEA -> #2AF598, Rund (50px), Weißer Text, Bold (600).
 */
 .btn-nav-cta {
   background: linear-gradient(135deg, #08AEEA 0%, #2AF598 100%) !important;

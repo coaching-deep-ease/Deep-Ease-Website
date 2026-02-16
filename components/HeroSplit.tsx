@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowRight, Sparkles, Briefcase, X } from 'lucide-react';
 import { SplitState } from '../types';
 
@@ -11,98 +11,93 @@ const HeroSplit: React.FC = () => {
   const leonBioRef = useRef<HTMLDivElement>(null);
   const simonBioRef = useRef<HTMLDivElement>(null);
 
-  // Easing Funktion für weiches Scrollen (Ease-In-Out Quad)
-  const easeInOutQuad = (t: number, b: number, c: number, d: number) => {
+  // Easing Funktion für weiches Scrollen (Ease-In-Out Cubic für mehr "Premium"-Gefühl)
+  const easeInOutCubic = (t: number, b: number, c: number, d: number) => {
     t /= d / 2;
-    if (t < 1) return c / 2 * t * t + b;
-    t--;
-    return -c / 2 * (t * (t - 2) - 1) + b;
+    if (t < 1) return c / 2 * t * t * t + b;
+    t -= 2;
+    return c / 2 * (t * t * t + 2) + b;
   };
 
   // Custom Scroll Funktion
   const smoothScrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
-    // Kurzer Timeout, damit das Element erst gerendert wird und die Höhe korrekt ist
-    setTimeout(() => {
-      const element = ref.current;
-      if (!element) return;
+    const element = ref.current;
+    if (!element) return;
 
-      const rect = element.getBoundingClientRect();
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const isMobile = window.innerWidth < 1024; // Tailwind lg breakpoint
+    // Berechnung nach dem Rendern
+    const rect = element.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const isMobile = window.innerWidth < 1024;
 
-      let targetPosition;
+    let targetPosition;
 
-      if (isMobile) {
-          // Mobile: Fokus auf den Anfang des Textes + Header Offset (ca. 120px Puffer für Header und Luft)
-          targetPosition = rect.top + scrollTop - 120;
+    if (isMobile) {
+      // Mobile: Fokus unter den Header (120px Offset)
+      targetPosition = rect.top + scrollTop - 120;
+    } else {
+      // Desktop: Bio angenehm im oberen Drittel positionieren (nicht zu tief)
+      targetPosition = rect.top + scrollTop - 180;
+    }
+
+    const startPosition = scrollTop;
+    const distance = targetPosition - startPosition;
+    const duration = 1200; // Etwas schneller als vorher für besseren Flow
+    let startTime: number | null = null;
+
+    const animation = (currentTime: number) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      
+      const nextScroll = easeInOutCubic(timeElapsed, startPosition, distance, duration);
+
+      window.scrollTo(0, nextScroll);
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
       } else {
-          // Desktop: Element vertikal im Viewport zentrieren
-          const elementCenter = rect.top + scrollTop + (rect.height / 2);
-          targetPosition = elementCenter - (window.innerHeight / 2);
+        window.scrollTo(0, targetPosition);
       }
+    };
 
-      const startPosition = scrollTop;
-      const distance = targetPosition - startPosition;
-      const duration = 1500; // 1.5 Sekunden für "easy hingleiten"
-      let startTime: number | null = null;
-
-      const animation = (currentTime: number) => {
-          if (startTime === null) startTime = currentTime;
-          const timeElapsed = currentTime - startTime;
-          
-          // Berechne neue Position
-          const nextScroll = easeInOutQuad(timeElapsed, startPosition, distance, duration);
-
-          window.scrollTo(0, nextScroll);
-
-          if (timeElapsed < duration) {
-              requestAnimationFrame(animation);
-          } else {
-              // Sicherstellen, dass wir am Ende exakt ankommen
-              window.scrollTo(0, targetPosition);
-          }
-      };
-
-      requestAnimationFrame(animation);
-    }, 100);
+    requestAnimationFrame(animation);
   };
 
-  // Helper zum Umschalten und Scrollen
-  const toggleLeon = () => {
-    const willOpen = !showLeonBio;
-    setShowLeonBio(willOpen);
-    setSplitState('left');
-    
-    if (willOpen) {
-      smoothScrollToRef(leonBioRef);
+  // Effekt: Scrollen auslösen, SOBALD die Bio gerendert wurde
+  useEffect(() => {
+    if (showLeonBio) {
+      // Kurzer Frame-Verzug für DOM-Stabilität
+      requestAnimationFrame(() => smoothScrollToRef(leonBioRef));
     }
+  }, [showLeonBio]);
+
+  useEffect(() => {
+    if (showSimonBio) {
+      requestAnimationFrame(() => smoothScrollToRef(simonBioRef));
+    }
+  }, [showSimonBio]);
+
+  // Helper zum Umschalten
+  const toggleLeon = () => {
+    setShowLeonBio(!showLeonBio);
+    if (!showLeonBio) setSplitState('left');
   };
 
   const toggleSimon = () => {
-    const willOpen = !showSimonBio;
-    setShowSimonBio(willOpen);
-    setSplitState('right');
-
-    if (willOpen) {
-      smoothScrollToRef(simonBioRef);
-    }
+    setShowSimonBio(!showSimonBio);
+    if (!showSimonBio) setSplitState('right');
   };
 
   // Desktop: Fixed 50% width base, slide effect via transform
-  // Mobile: Stacked full width
   const baseLayoutClass = "lg:w-1/2 w-full";
 
-  // Hintergrundfarbe des Hauptcontainers basierend auf Hover-Status
   const getContainerBackground = () => {
     if (splitState === 'left') return 'bg-gradient-to-r from-organic-sage/40 via-organic-sage/15 to-transparent';
     if (splitState === 'right') return 'bg-gradient-to-l from-organic-sky/40 via-organic-sky/15 to-transparent';
     return 'bg-transparent';
   };
 
-  // Transform-Logik für den Slide-Effekt (Nur Desktop)
   const getTransformClass = (side: 'left' | 'right') => {
     if (splitState === 'neutral') return 'lg:translate-x-0';
-    
     if (side === 'left') {
       return splitState === 'right' ? 'lg:-translate-x-[15%]' : 'lg:translate-x-0';
     } else {
@@ -116,7 +111,6 @@ const HeroSplit: React.FC = () => {
     return 'opacity-60 grayscale-[40%] hover:opacity-100 hover:grayscale-0';
   };
 
-  // Common glass button style
   const glassButtonStyle = "group/btn relative px-8 py-3 bg-white/40 hover:bg-white/60 text-organic-charcoal border border-white/50 backdrop-blur-md rounded-full font-medium overflow-hidden transition-all shadow-sm hover:shadow-lg hover:shadow-organic-sage/10";
 
   return (
@@ -124,7 +118,7 @@ const HeroSplit: React.FC = () => {
       id="coaches" 
       className="relative w-full min-h-screen flex flex-col lg:flex-row overflow-hidden bg-transparent"
     >
-      {/* Background Layer mit Maske für Fade-In/Out */}
+      {/* Background Layer mit Maske */}
       <div 
         className={`absolute inset-0 transition-all duration-1000 ease-in-out z-0 pointer-events-none ${getContainerBackground()}`}
         style={{
@@ -140,9 +134,7 @@ const HeroSplit: React.FC = () => {
           relative flex flex-col items-center lg:items-end px-6 lg:px-20 pt-10 pb-20 lg:py-16 lg:pt-4
           transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]
           border-b lg:border-b-0 border-organic-charcoal/5
-          group
-          justify-start
-          z-20
+          group justify-start z-20
           ${baseLayoutClass}
           ${getTransformClass('left')}
         `}
@@ -163,17 +155,14 @@ const HeroSplit: React.FC = () => {
             Fokus für Suchende und Klarheit für alle, die ihren Weg neu definieren. Mit systemischer Tiefe begleite ich dich dabei, deine inneren Werte zu ordnen und Blockaden zu lösen. Gemeinsam schaffen wir das Fundament für ein Leben, das wirklich zu dir passt.
           </p>
 
-           {/* Photo Card - KLICKBAR */}
            <div 
              className={`
                w-full aspect-[3/4] max-w-[320px] md:max-w-[480px] lg:max-w-[580px] mx-auto lg:mx-0 lg:ml-auto
                rounded-2xl overflow-hidden relative
                bg-white/70 backdrop-blur-md border border-white/80 shadow-sm
-               transition-all duration-700 delay-100 transform-gpu
-               cursor-pointer
+               transition-all duration-700 delay-100 transform-gpu cursor-pointer
                ${splitState === 'left' ? 'scale-[1.02] shadow-2xl shadow-organic-sage/20' : 'scale-100'}
              `}
-             style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
              onMouseEnter={() => setSplitState('left')}
              onClick={toggleLeon}
            >
@@ -181,12 +170,6 @@ const HeroSplit: React.FC = () => {
                 src="https://res.cloudinary.com/dgwme3a8e/image/upload/v1769863464/Leon_Lightning_Low_uhj2sk.jpg" 
                 alt="Leon Feldmeier"
                 className="w-full h-full object-cover transition-opacity duration-700 image-sharp"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  if (!target.src.includes('images.unsplash.com')) {
-                    target.src = "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=1887&auto=format&fit=crop";
-                  }
-                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-organic-sage/80 via-transparent to-transparent opacity-40"></div>
               <div className="absolute bottom-8 left-8 right-8 text-center bg-white/60 backdrop-blur-md border border-white/40 rounded-xl py-4 px-4 shadow-sm">
@@ -196,7 +179,6 @@ const HeroSplit: React.FC = () => {
               </div>
            </div>
 
-           {/* Leons Pfad Button */}
            <div className="mt-8 flex justify-center lg:justify-end">
               <button 
                 onClick={toggleLeon}
@@ -209,11 +191,10 @@ const HeroSplit: React.FC = () => {
               </button>
            </div>
 
-           {/* Expanded Bio Section */}
            {showLeonBio && (
              <div 
                 ref={leonBioRef}
-                className="mt-8 p-8 glass-panel rounded-3xl text-left animate-slide-up !border-0"
+                className="mt-8 p-8 glass-panel rounded-3xl text-left animate-slide-up !border-0 scroll-mt-24"
              >
                 <h3 className="font-serif text-2xl mb-6 text-organic-charcoal">Wer ich bin: Leon Feldmeier, dein Begleiter für Veränderung.</h3>
                 <div className="space-y-4 text-organic-text font-light leading-relaxed">
@@ -232,9 +213,7 @@ const HeroSplit: React.FC = () => {
         className={`
           relative flex flex-col items-center lg:items-start px-6 lg:px-20 py-20 lg:pb-20 lg:pt-4
           transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]
-          group
-          justify-start
-          z-20
+          group justify-start z-20
           ${baseLayoutClass}
           ${getTransformClass('right')}
         `}
@@ -257,17 +236,14 @@ const HeroSplit: React.FC = () => {
             Ich begleite Führungskräfte und Teams dabei, sich wirksam zu entwickeln.
           </p>
 
-           {/* Photo Card - KLICKBAR */}
            <div 
              className={`
                w-full aspect-[3/4] max-w-[320px] md:max-w-[480px] lg:max-w-[580px] mx-auto lg:mx-0 lg:mr-auto
                rounded-2xl overflow-hidden relative
                bg-white/70 backdrop-blur-md border border-white/80 shadow-sm
-               transition-all duration-700 delay-100 transform-gpu
-               cursor-pointer
+               transition-all duration-700 delay-100 transform-gpu cursor-pointer
                ${splitState === 'right' ? 'scale-[1.02] shadow-2xl shadow-organic-sky/20' : 'scale-100'}
              `}
-             style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
              onMouseEnter={() => setSplitState('right')}
              onClick={toggleSimon}
            >
@@ -275,12 +251,6 @@ const HeroSplit: React.FC = () => {
                 src="https://res.cloudinary.com/dgwme3a8e/image/upload/v1769863465/Simon_Lightning_Low_czuhay.jpg" 
                 alt="Simon Kuhn"
                 className="w-full h-full object-cover transition-opacity duration-700 image-sharp"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  if (!target.src.includes('images.unsplash.com')) {
-                    target.src = "https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1740&auto=format&fit=crop";
-                  }
-                }}
               />
                <div className="absolute inset-0 bg-gradient-to-t from-organic-sky/80 via-transparent to-transparent opacity-40"></div>
                <div className="absolute bottom-8 left-8 right-8 text-center bg-white/60 backdrop-blur-md border border-white/40 rounded-xl py-4 px-4 shadow-sm">
@@ -290,7 +260,6 @@ const HeroSplit: React.FC = () => {
               </div>
            </div>
 
-           {/* Simons Pfad Button */}
            <div className="mt-8 flex justify-center lg:justify-start">
               <button 
                 onClick={toggleSimon}
@@ -303,11 +272,10 @@ const HeroSplit: React.FC = () => {
               </button>
            </div>
 
-           {/* Expanded Bio Section for Simon */}
            {showSimonBio && (
              <div 
                 ref={simonBioRef}
-                className="mt-8 p-8 glass-panel rounded-3xl text-left animate-slide-up !border-0"
+                className="mt-8 p-8 glass-panel rounded-3xl text-left animate-slide-up !border-0 scroll-mt-24"
              >
                 <h3 className="font-serif text-2xl mb-6 text-organic-charcoal">Ich bin Simon, systemischer Coach und seit vielen Jahren in Führungs- und Entwicklungsprozessen tätig.</h3>
                 <div className="space-y-4 text-organic-text font-light leading-relaxed">
